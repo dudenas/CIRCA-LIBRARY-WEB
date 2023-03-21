@@ -14,26 +14,38 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.min.js"
 		integrity="sha512-N4kV7GkNv7QR7RX9YF/olywyIgIwNvfEe2nZtfyj73HdjCUkAfOBDbcuJ/cTaN04JKRnw1YG1wnUyNKMsNgg3g=="
 		crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-	<script src="sketch.js"></script>
 
 	<style>
 		body {
 			margin: 0;
 			padding: 0;
-			overflow: hidden;
+			/* overflow: hidden; */
+		}
+
+		.container {
+			width: 100%;
+			height: 40vh;
+			padding: 50px;
+			margin: auto;
+			display: flex;
+			justify-content: center;
+			align-items: center;
 		}
 
 		#header-canvas {
-			margin: auto;
-			z-index: -10;
-			width: 100%;
-			height: 92vh;
+			position: absolute;
+			width: auto;
+			height: auto;
 		}
 	</style>
 </head>
 
 <body>
-	<div id="header-canvas" defer></div>
+	<div class="container">
+		<div id="header-canvas"></div>
+	</div>
+
+	<script src="sketch.js" defer></script>
 </body>
 
 </html>

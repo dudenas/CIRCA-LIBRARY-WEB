@@ -442,7 +442,7 @@ let headerSketch = function (p) {
 	//———————————————————————————————————————————————————————————————————————————————————————————————— getWidthAndHeight
 	function getWidthAndHeight() {
 		// resize and center image
-		var myDiv = document.getElementById('header-canvas');
+		var myDiv = document.getElementById('header-canvas').parentElement;
 		_w = myDiv.offsetWidth
 		_h = myDiv.offsetHeight
 	}
