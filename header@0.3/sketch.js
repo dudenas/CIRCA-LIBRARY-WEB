@@ -29,7 +29,7 @@ let headerSketch = function (p) {
 	let _tpIndexes = 0
 
 	// scale to fit the whole div
-	let _scaleToFit = 3
+	let _scaleToFit = 1
 
 	//————————————————————————————————————————————— setup
 	p.setup = function () {
