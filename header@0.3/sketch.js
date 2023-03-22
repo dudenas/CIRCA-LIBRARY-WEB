@@ -38,6 +38,7 @@ let headerSketch = function (p) {
 		canvas.parent('#header-canvas')
 		// shuffle path array and decide how many parts there will be
 		resizeMyCanvas()
+		createPath()
 
 		// style
 		p.noFill()
@@ -293,7 +294,6 @@ let headerSketch = function (p) {
 		p.randomSeed(_rdSeed)
 		// create grid
 		createGrid()
-		createPath()
 		createPoints()
 	}
 
