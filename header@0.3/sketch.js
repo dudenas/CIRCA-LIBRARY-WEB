@@ -442,6 +442,8 @@ let headerSketch = function (p) {
 		midGraphicsMode: Math.floor(Math.random() * 4),
 	}
 
+	let _pw, _ph
+
 	//———————————————————————————————————————————————————————————————————————————————————————————————— getWidthAndHeight
 	function getWidthAndHeight() {
 		// resize and center image
@@ -453,9 +455,15 @@ let headerSketch = function (p) {
 	//———————————————————————————————————————————————————————————————————————————————————————————————— resizeMyCanvas
 	function resizeMyCanvas() {
 		getWidthAndHeight()
-		p.resizeCanvas(_w, _h * _scaleToFit)
-		_trail = []
-		createGRFC()
+		// only create graphics if the previous widht and height has changed
+		if (_pw != _w || _ph != _h) {
+			p.resizeCanvas(_w, _h * _scaleToFit)
+			_trail = []
+			createGRFC()
+		}
+
+		// update previous widht and height
+		_pw = _w, _ph = _h
 	}
 
 	window.addEventListener('resize', resizeMyCanvas, false);
