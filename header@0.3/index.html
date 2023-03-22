@@ -47,6 +47,19 @@
 	</div>
 
 	<script src="sketch.js" defer></script>
+
+	// make the div respond to different windown height
+
+	<script src="https://code.jquery.com/jquery-3.6.4.slim.min.js"
+		integrity="sha256-a2yjHM4jnF9f54xUQakjZGaqYs/V1CYvWpoqZzC2/Bw=" crossorigin="anonymous"></script>
+	<script>
+		const vh = $(window).height()
+		console.log(vh)
+		const bodyElement = $(document.body)
+
+		console.log(bodyElement)
+		bodyElement.css("height", vh)
+	</script>
 </body>
 
 </html>
