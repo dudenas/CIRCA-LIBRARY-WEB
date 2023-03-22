@@ -28,6 +28,9 @@ let headerSketch = function (p) {
 	let _skipCircles = 8
 	let _tpIndexes = 0
 
+	// scale to fit the whole div
+	let _scaleToFit = 3
+
 	//————————————————————————————————————————————— setup
 	p.setup = function () {
 		const canvas = p.createCanvas(1920 / 3 * 2, 1080 / 3 * 2, p.P2D);
@@ -341,7 +344,7 @@ let headerSketch = function (p) {
 		_ratio = p.width / params.scl
 		_grid = []
 		_gridRows = params.scl
-		_gridCols = Math.floor(p.height / p.width * params.scl)
+		_gridCols = Math.floor(p.height / p.width * params.scl / _scaleToFit)
 		for (let i = 0; i < _gridRows + 1; i++) {
 			const x = i * _ratio
 			_grid[i] = []
@@ -450,7 +453,7 @@ let headerSketch = function (p) {
 	//———————————————————————————————————————————————————————————————————————————————————————————————— resizeMyCanvas
 	function resizeMyCanvas() {
 		getWidthAndHeight()
-		p.resizeCanvas(_w, _h)
+		p.resizeCanvas(_w, _h * _scaleToFit)
 		_trail = []
 		createGRFC()
 	}
