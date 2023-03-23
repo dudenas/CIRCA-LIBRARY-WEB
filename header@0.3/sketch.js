@@ -68,6 +68,8 @@ let headerSketch = function (p) {
 			special1: p.random(),
 			special2: p.random()
 		}
+
+		p.frameRate(60)
 	}
 
 	//————————————————————————————————————————————— draw
