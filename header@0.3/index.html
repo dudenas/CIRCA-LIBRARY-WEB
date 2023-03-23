@@ -53,13 +53,6 @@
 	<script src="https://code.jquery.com/jquery-3.6.4.slim.min.js"
 		integrity="sha256-a2yjHM4jnF9f54xUQakjZGaqYs/V1CYvWpoqZzC2/Bw=" crossorigin="anonymous"></script>
 	<script>
-		// const vh = $(window).height()
-		// console.log(vh)
-		// const bodyElement = $(document.body)
-
-		// console.log(bodyElement)
-		// bodyElement.css("height", vh)
-
 		// First we get the viewport height and we multiple it by 1% to get a value for a vh unit
 		let vh = window.innerHeight * 0.01;
 		// Then we set the value in the --vh custom property to the root of the document
@@ -71,7 +64,6 @@
 			let vh = window.innerHeight * 0.01;
 			document.documentElement.style.setProperty('--vh', `${vh}px`);
 		});
-		console.log("test")
 	</script>
 </body>
 
