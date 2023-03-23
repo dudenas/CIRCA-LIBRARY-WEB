@@ -75,7 +75,8 @@ let logoSketch = function (lp) {
     }
 
     lp.draw = function () {
-        lp.background(_params.colors.background);
+        // lp.background(_params.colors.background);
+        lp.clear()
 
         // translate to the middle
         lp.translate(lp.width / 2, lp.height / 2);
