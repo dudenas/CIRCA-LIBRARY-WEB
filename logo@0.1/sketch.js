@@ -1,5 +1,6 @@
 let _params = {
     colors: {
+        background: [19, 20, 21],
         main: [255, 255, 255],
         debug: [255 * .6, 255 * .6, 255 * .6]
     }
@@ -31,8 +32,9 @@ let angleX = 0
 let angleY = Math.PI / 2
 let angleZ = 0
 
-let _swa = 1 * 4
-let _swb = 2 * 4
+let _tempScaleToSee = 5
+let _swa = 1 * _tempScaleToSee
+let _swb = 2.1 * _tempScaleToSee
 
 let _totalFrames = 60 * 3
 
@@ -54,7 +56,7 @@ let rotationZ = [
     [0, 0, 1],
 ];
 
-let _debug = true
+let _debug = false
 let _changeTime = Infinity
 
 let ease, styles
@@ -62,16 +64,17 @@ let ease, styles
 let _showTrail = false
 
 function setup() {
-    let canvas = createCanvas(72 * 10, 72 * 10);
+    let canvas = createCanvas(72 * _tempScaleToSee, 72 * _tempScaleToSee);
     canvas.id("canvas")
 
+    // create graphics
     createMyGraphics()
 
-    // PICK RANDOM FORM
+    // pick random form
     pickForm()
 
-    // CREATE PATH
-    // createPath()
+    // create path
+    createPath()
 
     // define style
     strokeCap(SQUARE)
@@ -86,14 +89,13 @@ function setup() {
         'gompertz', 'exponentialEmphasis', 'normalizedInverseErf'
     ];
 
+    // define framerate
     frameRate(60)
 }
 
 function createMyGraphics() {
-    // RESIZE GRAPHICS
-    const ratio = height / width
-    if (ratio > 1) _scale = width / 5 * 3
-    else _scale = height / 5 * 2
+    // size of the graphics in order to fit the canvas
+    _scale = height / 6 * 4
 
     // PUT CUBE POINTS
     points[0] = createVector(-0.5, -0.5, -0.5);
@@ -156,7 +158,9 @@ function pickForm() {
 }
 
 function draw() {
-    background(0);
+    background(_params.colors.background);
+
+    // translate to the middle
     translate(width / 2, height / 2);
 
     // create rotation matrix
@@ -190,19 +194,51 @@ function draw() {
         [0, 0, 1],
     ];
 
+    // project points
     let projected = projectPoints(points)
 
     const pts = projectPoints(myLinePoints)
 
+    // start drawing
+    // draw without path
+    // beginShape()
+    // noFill()
+    // stroke(..._params.colors.main)
+    // strokeWeight(_swa)
+    // for (let i = 0; i < pts.length; i++) {
+    //     const p = pts[i]
+    //     vertex(p.x, p.y)
+    // }
+    // endShape(CLOSE)
+
+    // draw with path
+    let currPath = 0
+    let flip = false
     beginShape()
     noFill()
-    stroke(..._params.colors.main)
+    stroke(_params.colors.main)
     strokeWeight(_swa)
+    // if (mouseX < width / 2) filxzl(255)
     for (let i = 0; i < pts.length; i++) {
-        const p = pts[i]
-        vertex(p.x, p.y)
+        if (i > 0) {
+            strokeWeight(flip ? _swa : _swb)
+            const p1 = pts[i - 1]
+            const p2 = pts[i]
+            vertex(p1.x, p1.y)
+            vertex(p2.x, p2.y)
+
+        }
+        // change strokeweight based on predefined path
+        if (_path[currPath] == i) {
+            endShape()
+            beginShape()
+            flip = !flip
+            currPath++
+        }
     }
-    endShape(CLOSE)
+    const p = pts[0]
+    vertex(p.x, p.y)
+    endShape()
 
 
     // draw GRID
@@ -266,4 +302,14 @@ function connect(i, j, points) {
     const b = points[j];
     stroke(..._params.colors.debug);
     line(a.x, a.y, b.x, b.y);
+}
+
+// create path for stroke to be different sizes
+function createPath() {
+    _path = new Array(myLinePoints.length - 2).fill(0).map((val, idx) => {
+        return idx + 1
+    })
+    shuffleArray(_path)
+    _path.splice(0, floor(random(myLinePoints.length - 2)))
+    _path.sort()
 }
