@@ -1,0 +1,3 @@
+[submodule "video@0.1"]
+	path = video@0.1
+	url = ./video@0.1
