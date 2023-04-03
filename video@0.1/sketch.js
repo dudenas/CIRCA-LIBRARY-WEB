@@ -4,11 +4,16 @@ let _params = {
 		main: [255, 255, 255],
 		debug: [255 * .6, 255 * .6, 255 * .6],
 		yellow: [255, 186, 8],
-		gray1: [255 * 0.2, 255 * 0.2, 255 * 0.2],
-		gray2: [255 * 0.3, 255 * 0.3, 255 * 0.3],
-		gray3: [255 * 0.4, 255 * 0.4, 255 * 0.4],
-		gray4: [255 * 0.5, 255 * 0.5, 255 * 0.5],
-		gray5: [255 * 0.6, 255 * 0.6, 255 * 0.6],
+		gray1: [36, 37, 40],
+		gray2: [50, 51, 54],
+		gray3: [59, 60, 62],
+		gray4: [63, 64, 67],
+		gray5: [255 * .6, 255 * .6, 255 * .6],
+		// gray1: [255 * 0.2, 255 * 0.2, 255 * 0.2],
+		// gray2: [255 * 0.3, 255 * 0.3, 255 * 0.3],
+		// gray3: [255 * 0.4, 255 * 0.4, 255 * 0.4],
+		// gray4: [255 * 0.5, 255 * 0.5, 255 * 0.5],
+		// gray5: [255 * 0.6, 255 * 0.6, 255 * 0.6],
 		lib1: [255, 125, 125],
 		lib2: [125, 255, 125],
 		lib3: [125, 125, 255],
@@ -327,6 +332,9 @@ function drawInsideRow(rowW, rowD, rowH, color, libCol, i, fc) {
 		} else if (_animation && i == 1) {
 			console.log('finished animation')
 			_animation = false
+
+			// change text
+			changeText()
 		}
 
 
@@ -368,3 +376,54 @@ function shuffleArray(array) {
 		array[j] = temp;
 	}
 }
+
+//——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————— Typewritaer
+// typewriter 
+
+var _typeWriter = {
+	count: 0,
+	textOld: "Steel",
+	textNew: "Steel",
+	speed: 60,
+	write: true
+};
+
+function changeText() {
+	_typeWriter.textNew = str(Math.floor(Math.random() * 1000000))
+	document.getElementById("search-bar-top-text-count").innerHTML = `∞ results`
+	typeWriter()
+}
+
+function typeWriter() {
+	// if write
+	if (_typeWriter.write) {
+		if (_typeWriter.count < _typeWriter.textNew.length) {
+			document.getElementById("search-bar-top-text-input").innerHTML += _typeWriter.textNew.charAt(_typeWriter.count)
+			_typeWriter.count++
+			setTimeout(typeWriter, _typeWriter.speed);
+		} else {
+			document.getElementById("search-bar-top-text-count").innerHTML = `${Math.floor(Math.random() * 1000)} results`
+			_typeWriter.textOld = _typeWriter.textNew
+			resetTypeWriter()
+		}
+	}
+
+	// if delete
+	else if (!_typeWriter.write) {
+		if (_typeWriter.count < _typeWriter.textOld.length) {
+			document.getElementById("search-bar-top-text-input").innerHTML = document.getElementById("search-bar-top-text-input").innerHTML.slice(0, -1)
+			_typeWriter.count++
+			setTimeout(typeWriter, _typeWriter.speed / 2);
+		} else {
+			resetTypeWriter()
+			setTimeout(typeWriter, _typeWriter.speed);
+		}
+	}
+}
+
+function resetTypeWriter() {
+	_typeWriter.write = !_typeWriter.write
+	_typeWriter.count = 0
+}
+
+typeWriter()
