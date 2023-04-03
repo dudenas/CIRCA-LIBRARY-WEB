@@ -16,7 +16,7 @@
 		body {
 			margin: 0;
 			padding: 0;
-			overflow: hidden;
+			/* overflow: hidden; */
 
 			/* background-color: rgb(19, 20, 21); */
 		}
@@ -26,11 +26,10 @@
 		}
 
 		.container {
-			width: calc(100vw - 100px);
-			/* height: calc(40vh - 100px); */
-			height: calc(var(--vh, 1vh) * 50 - 100px);
-			padding: 50px;
-			margin: auto;
+			width: 100vw;
+			height: calc(50vh);
+			padding: 0;
+			/* margin: auto; */
 			display: flex;
 			justify-content: center;
 			align-items: center;
@@ -51,11 +50,12 @@
 			padding: 0px;
 
 			position: absolute;
-			width: 400px;
+			width: 380px;
+			max-width: 80%;
 			height: auto;
 
 			left: 50%;
-			top: 50%;
+			top: 25%;
 			transform: translate(-50%, -50%);
 
 			/* Elevation Background/08 */

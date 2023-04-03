@@ -45,7 +45,7 @@ let subGraphicsSketch = function (sp) {
 		canvas.parent('#video-canvas')
 
 		// create ortho projection
-		// sp.ortho(-sp.width / 2, sp.width / 2, sp.height / 2, -sp.height / 2, 0, 1080 * 2);
+		sp.ortho(-sp.width / 2, sp.width / 2, sp.height / 2, -sp.height / 2, 0, 1080 * 2);
 		// sp.orbitControl();
 
 
