@@ -70,7 +70,8 @@ function draw() {
 	rotateY(Math.PI / 4 + PI / 2);
 
 	// define spacing inbetween the planes
-	const scl = map(mouseY, 0, windowHeight, 1, 2)
+	// const scl = map(mouseY, 0, windowHeight, 1, 2)
+	const scl = 1.5
 	const spacing = 300 / scl
 
 	// translate to the middle
@@ -96,10 +97,11 @@ function draw() {
 	// MAIN LIB
 	push()
 	translate(0, spacing * 3, 0)
-	libCount = drawMainLib(planeW, planeD, planeH, rowW, rowD, rowH, rows)
+	let libCount = drawMainLib(planeW, planeD, planeH, rowW, rowD, rowH, rows)
 	pop()
 
 	// OTHER LIBRARIES
+	// only do it when the new input arrives
 	if (_newInput) {
 		// randomise the choice of cubes
 		firstLibChoise = new Array(libTotal).fill(0).map((elm, idx) => elm = idx)
@@ -117,20 +119,27 @@ function draw() {
 		_newInput = false
 	}
 
+	// get total count of libraries
+	const libCountTotal = libCount.reduce((accumulator, value) => {
+		return accumulator + value;
+	}, 0);
+	let currLib = 0
+	// console.log(libCount, libCountTotal)
+
 	// draw libraries
 	push()
 	translate(0, spacing * 2, 0)
-	drawLib(planeW, planeD, planeH, libCells, libW, libD, libH, firstLibChoise, _params.colors.lib1)
+	currLib = drawLib(planeW, planeD, planeH, libCells, libW, libD, libH, firstLibChoise, _params.colors.lib1, currLib)
 	pop()
 
 	push()
 	translate(0, spacing * 1, 0)
-	drawLib(planeW, planeD, planeH, libCells, libW, libD, libH, secondLibChoise, _params.colors.lib2)
+	currLib = drawLib(planeW, planeD, planeH, libCells, libW, libD, libH, secondLibChoise, _params.colors.lib2, currLib)
 	pop()
 
 	push()
 	translate(0, 0, 0)
-	drawLib(planeW, planeD, planeH, libCells, libW, libD, libH, thirdLibChoise, _params.colors.lib3)
+	currLib = drawLib(planeW, planeD, planeH, libCells, libW, libD, libH, thirdLibChoise, _params.colors.lib3, currLib)
 	pop()
 
 	if (frameCount % _newInputFreq == 0 && _currRow > 0) {
@@ -170,6 +179,7 @@ function drawMainLib(planeW, planeD, planeH, rowW, rowD, rowH, rows) {
 		// define libCol
 		let libCol = null
 
+		// put each row to a different library
 		if (randLibChoise[1] < i / rows && i != 0 && i != rows - 1) {
 			libCol = _params.colors.lib1
 			libCount[0]++
@@ -227,7 +237,7 @@ function drawMainLib(planeW, planeD, planeH, rowW, rowD, rowH, rows) {
 	return libCount
 }
 
-function drawLib(planeW, planeD, planeH, libCells, libW, libD, libH, libChoise, libCol) {
+function drawLib(planeW, planeD, planeH, libCells, libW, libD, libH, libChoise, libCol, currLib) {
 	push()
 	for (let i = 0; i < libCells; i++) {
 		for (let j = 0; j < libCells; j++) {
@@ -239,12 +249,15 @@ function drawLib(planeW, planeD, planeH, libCells, libW, libD, libH, libChoise, 
 			push()
 
 			// if that is a special cell, draw it differently
+			// let special = false
 			if (libChoise.length > 0) {
 				for (let n = 0; n < libChoise.length; n++) {
-					if (libChoise[n] == idx) {
+					if (libChoise[n] == idx && currLib < rows - _currRow) {
 						ambientMaterial(...libCol);
 						noStroke()
 						d *= 2
+						currLib++
+						// special = true
 						break
 					} else {
 						ambientMaterial(..._params.colors.gray1);
@@ -255,6 +268,17 @@ function drawLib(planeW, planeD, planeH, libCells, libW, libD, libH, libChoise, 
 				ambientMaterial(..._params.colors.gray1);
 				stroke(..._params.colors.gray2)
 			}
+
+			// // do animation
+			// if (special) {
+			// 	const fc = _fc[rows - currLib - 1]
+			// 	// console.log(fc, _currRow)
+			// 	// console.log(fc)
+			// 	if (_animation && fc < _animationFrames) {
+			// 		const percent = fc / _animationFrames
+			// 		d = lerp(libD, libD * 2, percent)
+			// 	}
+			// }
 
 			translate(x - planeW / 2 + libW / 2, planeD / 2 + d / 2, z - planeH / 2 + libH / 2)
 			box(libW, d, libH)
@@ -267,6 +291,8 @@ function drawLib(planeW, planeD, planeH, libCells, libW, libD, libH, libChoise, 
 	ambientMaterial(..._params.colors.gray1);
 	box(planeW, planeD, planeH)
 	pop()
+
+	return currLib
 }
 
 //——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————— draw inside row
