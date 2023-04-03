@@ -25,11 +25,22 @@
 			margin: auto;
 		}
 
+		.container {
+			width: calc(100vw - 100px);
+			/* height: calc(40vh - 100px); */
+			height: calc(var(--vh, 1vh) * 50 - 100px);
+			padding: 50px;
+			margin: auto;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+
+			background-color: red;
+		}
+
 		#video-canvas {
-			position: absolute;
-			left: 50%;
-			top: 50%;
-			transform: translate(-50%, -50%);
+			width: auto;
+			height: auto;
 		}
 
 		/* SEARCH BAR */
@@ -137,49 +148,52 @@
 </head>
 
 <body>
-	<div id="video-canvas">
-		<!-- search bar -->
-		<div id="search-bar">
-			<!-- top text -->
-			<div id="search-bar-top">
-				<div>
-					<!-- icon -->
-					<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-						<g clip-path="url(#clip0_92_991)">
-							<path
-								d="M15.125 21.25C18.5077 21.25 21.25 18.5077 21.25 15.125C21.25 11.7423 18.5077 9 15.125 9C11.7423 9 9 11.7423 9 15.125C9 18.5077 11.7423 21.25 15.125 21.25Z"
-								stroke="white" stroke-opacity="0.6" stroke-linecap="round" stroke-linejoin="round" />
-							<path d="M19.4561 19.4563L22.9998 23" stroke="white" stroke-opacity="0.6"
-								stroke-linecap="round" stroke-linejoin="round" />
-						</g>
-						<defs>
-							<clipPath id="clip0_92_991">
-								<rect width="16" height="16" fill="white" transform="translate(8 8)" />
-							</clipPath>
-						</defs>
-					</svg>
-				</div>
-				<div id="search-bar-top-text">
-					<div id="search-bar-top-text-input"></div>
-					<div id="search-bar-top-text-count">∞ results</div>
-				</div>
-			</div>
-			<!-- line -->
-			<div id="search-bar-line"></div>
-			<!-- bot text -->
-			<div id="search-bar-bot">
-				<div id="search-bar-bot-text">
-					<div class="search-bar-bot-text-elm">Material <svg width="8" height="9" viewBox="0 0 8 9"
-							fill="none" xmlns="http://www.w3.org/2000/svg">
-							<path d="M0.5 3L3.99999 6.49999L7.49998 3" stroke="white" stroke-opacity="0.6"
-								stroke-linejoin="bevel" />
+	<div class="container">
+		<div id="video-canvas">
+			<!-- search bar -->
+			<div id="search-bar">
+				<!-- top text -->
+				<div id="search-bar-top">
+					<div>
+						<!-- icon -->
+						<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<g clip-path="url(#clip0_92_991)">
+								<path
+									d="M15.125 21.25C18.5077 21.25 21.25 18.5077 21.25 15.125C21.25 11.7423 18.5077 9 15.125 9C11.7423 9 9 11.7423 9 15.125C9 18.5077 11.7423 21.25 15.125 21.25Z"
+									stroke="white" stroke-opacity="0.6" stroke-linecap="round"
+									stroke-linejoin="round" />
+								<path d="M19.4561 19.4563L22.9998 23" stroke="white" stroke-opacity="0.6"
+									stroke-linecap="round" stroke-linejoin="round" />
+							</g>
+							<defs>
+								<clipPath id="clip0_92_991">
+									<rect width="16" height="16" fill="white" transform="translate(8 8)" />
+								</clipPath>
+							</defs>
 						</svg>
 					</div>
-					<div class="search-bar-bot-text-elm">Emmision factor<svg width="8" height="9" viewBox="0 0 8 9"
-							fill="none" xmlns="http://www.w3.org/2000/svg">
-							<path d="M0.5 3L3.99999 6.49999L7.49998 3" stroke="white" stroke-opacity="0.6"
-								stroke-linejoin="bevel" />
-						</svg>
+					<div id="search-bar-top-text">
+						<div id="search-bar-top-text-input"></div>
+						<div id="search-bar-top-text-count">∞ results</div>
+					</div>
+				</div>
+				<!-- line -->
+				<div id="search-bar-line"></div>
+				<!-- bot text -->
+				<div id="search-bar-bot">
+					<div id="search-bar-bot-text">
+						<div class="search-bar-bot-text-elm">Material <svg width="8" height="9" viewBox="0 0 8 9"
+								fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path d="M0.5 3L3.99999 6.49999L7.49998 3" stroke="white" stroke-opacity="0.6"
+									stroke-linejoin="bevel" />
+							</svg>
+						</div>
+						<div class="search-bar-bot-text-elm">Emmision factor<svg width="8" height="9" viewBox="0 0 8 9"
+								fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path d="M0.5 3L3.99999 6.49999L7.49998 3" stroke="white" stroke-opacity="0.6"
+									stroke-linejoin="bevel" />
+							</svg>
+						</div>
 					</div>
 				</div>
 			</div>

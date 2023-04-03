@@ -45,7 +45,7 @@ let subGraphicsSketch = function (sp) {
 		canvas.parent('#video-canvas')
 
 		// create ortho projection
-		sp.ortho(-sp.width / 2, sp.width / 2, sp.height / 2, -sp.height / 2, 0, 1080 * 2);
+		// sp.ortho(-sp.width / 2, sp.width / 2, sp.height / 2, -sp.height / 2, 0, 1080 * 2);
 		// sp.orbitControl();
 
 
@@ -56,6 +56,8 @@ let subGraphicsSketch = function (sp) {
 		sp.frameRate(60)
 
 		resetVariables()
+
+		resizeMyCanvas()
 	}
 
 	//——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————— draw
@@ -423,6 +425,36 @@ let subGraphicsSketch = function (sp) {
 	}
 
 	typeWriter()
+
+	//——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————— Resize
+	//———————————————————————————————————————————————————————————————————————————————————————————————— getWidthAndHeight
+	let _w, _h
+	let _pw, _ph
+
+	function getWidthAndHeight() {
+		// resize and center image
+		var myDiv = document.getElementById('video-canvas').parentElement;
+		_w = myDiv.offsetWidth
+		_h = myDiv.offsetHeight
+
+		if (_w > _h) _w = _h
+		else _h = _w
+	}
+
+	//———————————————————————————————————————————————————————————————————————————————————————————————— resizeMyCanvas
+	function resizeMyCanvas() {
+		getWidthAndHeight()
+		// only create graphics if the previous widht and height has changed
+		if (_pw != _w || _ph != _h) {
+			sp.resizeCanvas(_w, _h)
+			sp.ortho(-1080 / 2, 1080 / 2, 1080 / 2, -1080 / 2, 0, 1080 * 2);
+		}
+
+		// update previous widht and height
+		_pw = _w, _ph = _h
+	}
+
+	window.addEventListener('resize', resizeMyCanvas, false);
 }
 
 new p5(subGraphicsSketch)
