@@ -62,6 +62,7 @@ let subGraphicsSketch = function (sp) {
 
 	//——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————— draw
 	sp.draw = function () {
+		let start = sp.millis();
 		// constant random Seed for the same results
 		sp.randomSeed(_seed)
 
@@ -157,6 +158,10 @@ let subGraphicsSketch = function (sp) {
 				_waitCount++
 			}
 		}
+
+		let end = sp.millis();
+		let elapsed = end - start;
+		if (sp.frameCount % 30 == 0) console.log("This took: " + elapsed + "ms.")
 	}
 
 	function resetVariables() {

@@ -10,11 +10,6 @@ let subGraphicsSketch = function (sp) {
 			gray3: [59, 60, 62],
 			gray4: [63, 64, 67],
 			gray5: [255 * .6, 255 * .6, 255 * .6],
-			// gray1: [255 * 0.2, 255 * 0.2, 255 * 0.2],
-			// gray2: [255 * 0.3, 255 * 0.3, 255 * 0.3],
-			// gray3: [255 * 0.4, 255 * 0.4, 255 * 0.4],
-			// gray4: [255 * 0.5, 255 * 0.5, 255 * 0.5],
-			// gray5: [255 * 0.6, 255 * 0.6, 255 * 0.6],
 			lib1: [255, 125, 125],
 			lib2: [125, 255, 125],
 			lib3: [125, 125, 255],
@@ -62,6 +57,8 @@ let subGraphicsSketch = function (sp) {
 
 	//——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————— draw
 	sp.draw = function () {
+		let start = sp.millis();
+
 		// constant random Seed for the same results
 		sp.randomSeed(_seed)
 
@@ -157,6 +154,10 @@ let subGraphicsSketch = function (sp) {
 				_waitCount++
 			}
 		}
+
+		let end = sp.millis();
+		let elapsed = end - start;
+		if (sp.frameCount % 30 == 0) console.log("This took: " + elapsed + "ms.")
 	}
 
 	function resetVariables() {
