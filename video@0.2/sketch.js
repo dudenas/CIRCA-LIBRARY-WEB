@@ -462,5 +462,5 @@ let subGraphicsSketch = function (sp) {
 
 	window.addEventListener('resize', resizeMyCanvas, false);
 }
-
+p5.disableFriendlyErrors = true;
 new p5(subGraphicsSketch)
