@@ -23,10 +23,11 @@ let subGraphicsSketch = function (sp) {
 
 	let _newInput = true
 
+	const _frameRate = 60
 	const rows = 25
-	let _animationFrames = 10
-	let _waitTime = 60
-	let _newInputFreq = 4
+	let _animationFrames = Math.floor(_frameRate / 6)
+	let _waitTime = Math.floor(_frameRate * 2)
+	let _newInputFreq = Math.floor(_frameRate / 15)
 
 	let _currRow
 	let _seed
@@ -53,7 +54,7 @@ let subGraphicsSketch = function (sp) {
 		sp.strokeWeight(2)
 		// noLoop()
 
-		sp.frameRate(60)
+		sp.frameRate(_frameRate)
 
 		resetVariables()
 
@@ -62,7 +63,7 @@ let subGraphicsSketch = function (sp) {
 
 	//——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————— draw
 	sp.draw = function () {
-		let start = sp.millis();
+		// let start = sp.millis();
 		// constant random Seed for the same results
 		sp.randomSeed(_seed)
 
@@ -159,9 +160,9 @@ let subGraphicsSketch = function (sp) {
 			}
 		}
 
-		let end = sp.millis();
-		let elapsed = end - start;
-		if (sp.frameCount % 30 == 0) console.log("This took: " + elapsed + "ms.")
+		// let end = sp.millis();
+		// let elapsed = end - start;
+		// if (sp.frameCount % 30 == 0) console.log("This took: " + elapsed + "ms.")
 	}
 
 	function resetVariables() {
