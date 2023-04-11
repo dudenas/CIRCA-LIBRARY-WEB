@@ -20,6 +20,7 @@ let subGraphicsSketch = function (sp) {
 			lib3: [125, 125, 255],
 		}
 	}
+	let _data
 
 	let _newInput = true
 
@@ -36,8 +37,11 @@ let subGraphicsSketch = function (sp) {
 	let _waitCount
 
 	let firstLibChoise, secondLibChoise, thirdLibChoise
-
-
+	//——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————— preload
+	sp.preload = function () {
+		// load the data for the search bar
+		_data = sp.loadTable('data.csv', 'csv', 'header');
+	}
 
 	//——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————— setup
 	sp.setup = function () {
@@ -388,12 +392,24 @@ let subGraphicsSketch = function (sp) {
 		count: 0,
 		textOld: "Steel",
 		textNew: "Steel",
+		textResults: "836",
 		speed: 60,
-		write: true
+		write: true,
+		currRow: 0
 	};
 
 	function changeText() {
-		_typeWriter.textNew = String(Math.floor(Math.random() * 1000000))
+		// get random row
+		// const randRow = Math.floor(Math.random() * _data.getRowCount())
+		_typeWriter.currRow = (_typeWriter.currRow + 1) % _data.getRowCount()
+		const randRow = _typeWriter.currRow
+		const searchTerm = _data.getRow(randRow).getString(0)
+		const searchResults = _data.getRow(randRow).getString(1)
+		const capitalizedSearchTerm = searchTerm.charAt(0).toUpperCase() + searchTerm.slice(1)
+		_typeWriter.textNew = capitalizedSearchTerm
+		_typeWriter.textResults = searchResults
+
+		// _typeWriter.textNew = String(Math.floor(Math.random() * 1000000))
 		document.getElementById("search-bar-top-text-count").innerHTML = `∞ results`
 		typeWriter()
 	}
@@ -406,7 +422,8 @@ let subGraphicsSketch = function (sp) {
 				_typeWriter.count++
 				setTimeout(typeWriter, _typeWriter.speed);
 			} else {
-				document.getElementById("search-bar-top-text-count").innerHTML = `${Math.floor(Math.random() * 1000)} results`
+				// document.getElementById("search-bar-top-text-count").innerHTML = `${Math.floor(Math.random() * 1000)} results`
+				document.getElementById("search-bar-top-text-count").innerHTML = `${_typeWriter.textResults} results`
 				_typeWriter.textOld = _typeWriter.textNew
 				resetTypeWriter()
 			}
@@ -462,5 +479,6 @@ let subGraphicsSketch = function (sp) {
 
 	window.addEventListener('resize', resizeMyCanvas, false);
 }
+
 p5.disableFriendlyErrors = true;
 new p5(subGraphicsSketch)
