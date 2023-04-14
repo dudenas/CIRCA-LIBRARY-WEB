@@ -40,7 +40,9 @@ let subGraphicsSketch = function (sp) {
 	//——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————— preload
 	sp.preload = function () {
 		// load the data for the search bar
-		_data = sp.loadTable('data.csv', 'csv', 'header');
+
+		// _data = sp.loadTable('data.csv', 'csv', 'header');
+		_data = sp.loadTable('https://uploads-ssl.webflow.com/6409e1e8bee24b5462f985c8/64390e4492efb9545759dd38_data.csv', 'csv', 'header');
 	}
 
 	//——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————— setup
@@ -166,7 +168,7 @@ let subGraphicsSketch = function (sp) {
 
 		let end = sp.millis();
 		let elapsed = end - start;
-		if (sp.frameCount % 30 == 0) console.log("This took: " + elapsed + "ms.")
+		// if (sp.frameCount % 30 == 0) console.log("This took: " + elapsed + "ms.")
 	}
 
 	function resetVariables() {

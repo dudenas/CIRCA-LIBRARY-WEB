@@ -35,6 +35,7 @@ const rows = 25
 class myRow {
 	constructor() {
 		this.objcts = []
+		this.objctsInfo = []
 	}
 }
 init();
@@ -360,6 +361,14 @@ function drawBox(w, d, h, col, group, pos, obj) {
 
 	if (obj) {
 		obj.objcts.push(object)
+		obj.objctsInfo.push({
+			w,
+			d,
+			h,
+			col,
+			group,
+			pos
+		})
 	}
 }
 
@@ -378,16 +387,16 @@ function onWindowResize() {
 }
 
 function animate() {
-	const obj = _rows[0].objcts[0]
-	const depth = obj.geometry.parameters.depth
-	const pos = obj.position.z
-	obj.scale.z = .1
-	obj.position.z = pos * 0.1 - 200
-	// obj.geometry.translate(0, 0, -depth * 2); // three.js r.72
-	// console.log(obj, depth)
+	// const obj = _rows[0].objcts[0]
+	// const objInfo = _rows[0].objctsInfo[0]
+	// const h = objInfo.h
+	// const z = objInfo.pos.z
+	// obj.scale.z = .3
+	// obj.position.z = z - h / 2 + (h * obj.scale.z) / 2
+	// console.log(objInfo, h, z)
 
 	// animation happens here
-	// requestAnimationFrame(animate);
+	requestAnimationFrame(animate);
 
 	render();
 	stats.update();
