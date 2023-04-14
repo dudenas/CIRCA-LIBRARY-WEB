@@ -52,10 +52,8 @@ let subGraphicsSketch = function (sp) {
 		// create ortho projection
 		sp.ortho(-sp.width / 2, sp.width / 2, sp.height / 2, -sp.height / 2, 0, 1080 * 2);
 		// sp.orbitControl();
-
-
 		// set global style
-		sp.strokeWeight(2)
+		// sp.strokeWeight(2)
 		// noLoop()
 
 		sp.frameRate(_frameRate)
@@ -63,11 +61,13 @@ let subGraphicsSketch = function (sp) {
 		resetVariables()
 
 		resizeMyCanvas()
+
+		sp.noStroke()
 	}
 
 	//——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————— draw
 	sp.draw = function () {
-		// let start = sp.millis();
+		let start = sp.millis();
 		// constant random Seed for the same results
 		sp.randomSeed(_seed)
 
@@ -76,8 +76,8 @@ let subGraphicsSketch = function (sp) {
 
 		sp.directionalLight(255, 255, 255, 1, -1, 0);
 		sp.ambientLight(175);
-		sp.stroke(255, 0, 85)
-		sp.noStroke()
+		// sp.stroke(255, 0, 85)
+		// sp.noStroke()
 
 
 		sp.rotateX(Math.asin(1 / Math.sqrt(3)));
@@ -164,9 +164,9 @@ let subGraphicsSketch = function (sp) {
 			}
 		}
 
-		// let end = sp.millis();
-		// let elapsed = end - start;
-		// if (sp.frameCount % 30 == 0) console.log("This took: " + elapsed + "ms.")
+		let end = sp.millis();
+		let elapsed = end - start;
+		if (sp.frameCount % 30 == 0) console.log("This took: " + elapsed + "ms.")
 	}
 
 	function resetVariables() {
@@ -267,19 +267,19 @@ let subGraphicsSketch = function (sp) {
 					for (let n = 0; n < libChoise.length; n++) {
 						if (libChoise[n] == idx && currLib < rows - _currRow) {
 							sp.ambientMaterial(...libCol);
-							sp.noStroke()
+							// sp.noStroke()
 							d *= 2
 							currLib++
 							// special = true
 							break
 						} else {
 							sp.ambientMaterial(..._params.colors.gray1);
-							sp.stroke(..._params.colors.gray2)
+							// sp.stroke(..._params.colors.gray2)
 						}
 					}
 				} else {
 					sp.ambientMaterial(..._params.colors.gray1);
-					sp.stroke(..._params.colors.gray2)
+					// sp.stroke(..._params.colors.gray2)
 				}
 
 				// // do animation
@@ -300,7 +300,7 @@ let subGraphicsSketch = function (sp) {
 		}
 
 		// plane
-		sp.noStroke()
+		// sp.noStroke()
 		sp.ambientMaterial(..._params.colors.gray1);
 		sp.box(planeW, planeD, planeH)
 		sp.pop()
