@@ -9,7 +9,6 @@ let theta = 0;
 
 const radius = 1000;
 const frustumSize = 1000; // TODO: return to 1000, controls scale
-let incr = 0;
 
 let _params = {
 	colors: {
@@ -29,30 +28,148 @@ let _params = {
 }
 
 let _rows = []
+let _libBoxes = []
 
 const rows = 25
+
+// animation 
+const _frameRate = 60
+let _animationFrames = Math.floor(_frameRate / 6)
+let _waitTime = Math.floor(_frameRate * 1)
+let _newInputFreq = Math.floor(_frameRate / 15)
+let _frameCount = 0
+
+let _animation
+let _currRow
+let _waitCount
+
+let clock = new THREE.Clock();
+let delta = 0;
+// 30 fps
+let interval = 1 / _frameRate;
+
+let _w, _h
+let _pw, _ph
+
+let _data = []
+
+function resetVariables() {
+	_rows = []
+	_libBoxes = []
+
+	_currRow = rows
+	_animation = true
+	_waitCount = 0
+}
+
+class libBox {
+	constructor(obj) {
+		this.obj = obj
+		this.d = this.obj.position.y / 3 // FIXME: this value is hard written. 3 should be taken from where it is created
+
+		this.reset()
+	}
+
+	reset() {
+		this.obj.scale.y = 0
+		this.obj.position.y = this.d
+
+		this.fc = 0
+		this.finished = false
+
+		this.obj.visible = false
+	}
+
+	update() {
+		if (!this.finished) {
+			if (!this.obj.visible) this.obj.visible = true
+			if (this.fc <= _animationFrames) {
+				const percent = this.fc / _animationFrames
+
+				this.obj.scale.y = mapValues(percent, 0, 1, 0, 1)
+				this.obj.position.y = mapValues(percent, 0, 1, this.d, this.d * 3)
+
+				this.fc++
+			}
+		}
+	}
+}
 
 class myRow {
 	constructor() {
 		this.objcts = []
 		this.objctsInfo = []
 	}
+
+	reset() {
+		for (let i = 0; i < this.objcts.length - 1; i++) {
+			const obj = this.objcts[i]
+			const objInfo = this.objctsInfo[i]
+			const h = objInfo.h
+			const z = objInfo.pos.z
+			obj.scale.z = 0
+			obj.position.z = z - h / 2 + (h * obj.scale.z) / 2
+
+			// set the visisbility to false
+			obj.visible = false
+		}
+
+		const obj = this.objcts[this.objcts.length - 1]
+		obj.scale.y = 0
+		obj.visible = false
+
+		this.fc = 0
+		this.finished = false
+	}
+
+	update() {
+		if (!this.finished) {
+			if (this.fc <= _animationFrames) {
+				const percent = this.fc / _animationFrames
+
+				// go trough all objects, exclude the last one as a special case
+				for (let i = 0; i < this.objcts.length - 1; i++) {
+					const obj = this.objcts[i]
+					const objInfo = this.objctsInfo[i]
+					const h = objInfo.h
+					const z = objInfo.pos.z
+					obj.scale.z = mapValues(percent, 0, 1, 0, 1)
+					obj.position.z = z - h / 2 + (h * obj.scale.z) / 2
+
+					// set the visibility back
+					if (!obj.visible) obj.visible = true
+				}
+
+				// final object
+				const obj = this.objcts[this.objcts.length - 1]
+				obj.scale.y = mapValues(percent, 0, 1, 0, 1)
+
+				// set the visibility back
+				if (!obj.visible) obj.visible = true
+
+
+				// update individual framecount
+				this.fc++
+			} else {
+				this.finished = true
+			}
+		}
+	}
 }
-init();
+
+init()
 animate();
 
+function createMyGraphics() {
+	// initing the initial values
+	resetVariables()
 
-function init() {
+	// clear scene
+	while (scene.children.length > 0) {
+		scene.remove(scene.children[0]);
+	}
 
-	container = document.createElement('div');
-	document.body.appendChild(container);
-
-	const aspect = window.innerWidth / window.innerHeight;
-	camera = new THREE.OrthographicCamera(frustumSize * aspect / -2, frustumSize * aspect / 2, frustumSize / 2, frustumSize / -2, 1, 5000);
-
-	scene = new THREE.Scene();
-	scene.background = new THREE.Color(0xf0f0f0);
-	const d = 100
+	// lights
 	const light = new THREE.DirectionalLight(0xffffff, .75);
 	light.position.set(-1, 2, 0).normalize();
 	light.castShadow = true;
@@ -61,9 +178,7 @@ function init() {
 	const alight = new THREE.AmbientLight(0xffffff, .75);
 	scene.add(alight);
 
-
 	// variables
-
 	const scl = 1.5
 
 	// define plane
@@ -132,13 +247,47 @@ function init() {
 	drawLib(planeW, planeD, planeH, libCells, libW, libD, libH, thirdLibChoise, _params.colors.lib3, group4)
 	scene.add(group4)
 	group4.position.y = 0 - offset
+}
+
+function successFunction(data) {
+	// read data
+	var allRows = data.split(/\r?\n|\r/);
+	for (var singleRow = 0; singleRow < allRows.length; singleRow++) {
+		var rowCells = allRows[singleRow].split(',');
+		if (singleRow !== 0) {
+			_data.push([rowCells[0], rowCells[1]])
+		}
+
+	}
+	console.log(_data)
+}
+
+
+function init() {
+	$.ajax({
+		url: 'https://uploads-ssl.webflow.com/6409e1e8bee24b5462f985c8/64390e4492efb9545759dd38_data.csv',
+		dataType: 'text',
+	}).done(successFunction);
+
+	container = document.createElement('div');
+	// document.body.appendChild(container);
+	document.getElementById("video-canvas").appendChild(container);
+
+	const aspect = window.innerWidth / window.innerHeight;
+	camera = new THREE.OrthographicCamera(frustumSize * aspect / -2, frustumSize * aspect / 2, frustumSize / 2, frustumSize / -2, 1, 5000);
+
+	// clear scene
+	scene = new THREE.Scene();
+	scene.background = new THREE.Color(0xf0f0f0);
+
+	createMyGraphics()
 
 	renderer = new THREE.WebGLRenderer({
 		antialias: true
 	});
 
 	renderer.setPixelRatio(window.devicePixelRatio);
-	renderer.setSize(window.innerWidth, window.innerHeight);
+	renderer.setSize(1080, 1080);
 	renderer.shadowMap.enabled = true;
 	renderer.shadowMap.type = THREE.PCFSoftShadowMap; // default THREE.PCFShadowMap/
 
@@ -147,7 +296,9 @@ function init() {
 	stats = new Stats();
 	container.appendChild(stats.dom);
 
-	window.addEventListener('resize', onWindowResize);
+	window.addEventListener('resize', resizeMyCanvas);
+
+	resizeMyCanvas()
 
 }
 
@@ -175,6 +326,7 @@ function drawLib(planeW, planeD, planeH, libCells, libW, libD, libH, libChoise, 
 			let d = libD
 			let offD = d
 			const idx = i + j * libCells
+			let isLibBox = false
 			// push()
 
 			if (libChoise.length > 0) {
@@ -184,6 +336,7 @@ function drawLib(planeW, planeD, planeH, libCells, libW, libD, libH, libChoise, 
 
 						// d *= 2
 						offD = d * 3
+						isLibBox = true
 						break
 					}
 				}
@@ -193,7 +346,7 @@ function drawLib(planeW, planeD, planeH, libCells, libW, libD, libH, libChoise, 
 				x: x - planeW / 2 + libW / 2,
 				y: offD,
 				z: z1 - planeH / 2 + libH / 2
-			})
+			}, null, isLibBox)
 		}
 	}
 
@@ -334,10 +487,12 @@ function drawInsideRow(rowW, rowD, rowH, offWOut, color, libCol, group) {
 		y: offD,
 		z: offH + lastCellH / 2
 	}, row)
+
+	row.reset()
 }
 
 //——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————— draw main lib : box
-function drawBox(w, d, h, col, group, pos, obj) {
+function drawBox(w, d, h, col, group, pos, obj, isLibBox) {
 	const geometry = new THREE.BoxGeometry(w, d, h);
 	const object = new THREE.Mesh(geometry, new THREE.MeshLambertMaterial({
 		color: col,
@@ -370,35 +525,126 @@ function drawBox(w, d, h, col, group, pos, obj) {
 			pos
 		})
 	}
+
+	if (isLibBox) {
+		_libBoxes.push(new libBox(object))
+	}
 }
 
-function onWindowResize() {
+//——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————— Resize
+// function onWindowResize() {
 
-	const aspect = window.innerWidth / window.innerHeight;
+// 	const aspect = window.innerWidth / window.innerHeight;
 
-	camera.left = -frustumSize * aspect / 2;
-	camera.right = frustumSize * aspect / 2;
-	camera.top = frustumSize / 2;
-	camera.bottom = -frustumSize / 2;
+// 	camera.left = -frustumSize * aspect / 2;
+// 	camera.right = frustumSize * aspect / 2;
+// 	camera.top = frustumSize / 2;
+// 	camera.bottom = -frustumSize / 2;
 
-	camera.updateProjectionMatrix();
+// 	camera.updateProjectionMatrix();
 
-	renderer.setSize(window.innerWidth, window.innerHeight);
+// 	renderer.setSize(window.innerWidth, window.innerHeight);
+
+// }
+
+//——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————— Resize
+//———————————————————————————————————————————————————————————————————————————————————————————————— getWidthAndHeight
+
+function getWidthAndHeight() {
+	// resize and center image
+	var myDiv = document.getElementById('video-canvas').parentElement;
+	_w = myDiv.offsetWidth
+	_h = myDiv.offsetHeight
+
+	if (_w > _h) _w = _h
+	else _h = _w
 }
+
+//———————————————————————————————————————————————————————————————————————————————————————————————— resizeMyCanvas
+function resizeMyCanvas() {
+	getWidthAndHeight()
+	// only create graphics if the previous widht and height has changed
+	if (_pw != _w || _ph != _h) {
+		// console.log(_w, _h)
+		renderer.setSize(_w, _h);
+	}
+
+	// update previous widht and height
+	_pw = _w, _ph = _h
+}
+
+//——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————— P5 functions
+function lerp(x, y, z, amt) {
+	this.x += (x - this.x) * amt || 0;
+	this.y += (y - this.y) * amt || 0;
+	this.z += (z - this.z) * amt || 0;
+	return this;
+};
+
+function constrain(n, low, high) {
+	return Math.max(Math.min(n, high), low);
+};
+
+function mapValues(n, start1, stop1, start2, stop2, withinBounds) {
+	const newval = (n - start1) / (stop1 - start1) * (stop2 - start2) + start2;
+	if (start2 < stop2) {
+		return constrain(newval, start2, stop2);
+	} else {
+		return constrain(newval, stop2, start2);
+	}
+};
 
 function animate() {
-	// const obj = _rows[0].objcts[0]
-	// const objInfo = _rows[0].objctsInfo[0]
-	// const h = objInfo.h
-	// const z = objInfo.pos.z
-	// obj.scale.z = .3
-	// obj.position.z = z - h / 2 + (h * obj.scale.z) / 2
-	// console.log(objInfo, h, z)
-
 	// animation happens here
+	delta += clock.getDelta();
+
+	if (delta > interval) {
+		// go through rows and animate them
+		if (_animation) {
+			// UPDATE MAIN GRAPHICS
+			let countFinished = 0
+			for (let i = _rows.length - 1; i >= _currRow; i--) {
+				const row = _rows[i]
+				row.update()
+				_libBoxes[_libBoxes.length - i - 1].update()
+
+				// update count of finished
+				countFinished = row.finished ? ++countFinished : countFinished;
+			}
+
+			// update current dow
+			if (_frameCount % _newInputFreq == 0 && _currRow > 0) {
+				_currRow--
+			}
+
+			// if everything is finished next step of the animation
+			if (countFinished == _rows.length) {
+				_animation = false
+
+				// change text
+				changeText()
+			}
+		} else {
+			if (_waitCount == _waitTime) {
+				console.log('new animation')
+				createMyGraphics()
+			} else {
+				_waitCount++
+			}
+		}
+
+
+		// update framecount
+		_frameCount++
+
+		// The draw or time dependent code are here
+		render();
+
+		delta = delta % interval;
+	}
+
 	requestAnimationFrame(animate);
 
-	render();
 	stats.update();
 }
 
@@ -419,3 +665,67 @@ function render() {
 
 	renderer.render(scene, camera);
 }
+
+//——————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————— Typewritaer
+// typewriter 
+
+var _typeWriter = {
+	count: 0,
+	textOld: "Steel",
+	textNew: "Steel",
+	textResults: "836",
+	speed: 60,
+	write: true,
+	currRow: 0
+};
+
+function changeText() {
+	// get random row
+	// const randRow = Math.floor(Math.random() * _data.length)
+	_typeWriter.currRow = (_typeWriter.currRow + 1) % _data.length
+	const randRow = _typeWriter.currRow
+	const searchTerm = _data[randRow][0]
+	const searchResults = _data[randRow][1]
+	const capitalizedSearchTerm = searchTerm.charAt(0).toUpperCase() + searchTerm.slice(1)
+	_typeWriter.textNew = capitalizedSearchTerm
+	_typeWriter.textResults = searchResults
+
+	// _typeWriter.textNew = String(Math.floor(Math.random() * 1000000))
+	document.getElementById("search-bar-top-text-count").innerHTML = `∞ results`
+	typeWriter()
+}
+
+function typeWriter() {
+	// if write
+	if (_typeWriter.write) {
+		if (_typeWriter.count < _typeWriter.textNew.length) {
+			document.getElementById("search-bar-top-text-input").innerHTML += _typeWriter.textNew.charAt(_typeWriter.count)
+			_typeWriter.count++
+			setTimeout(typeWriter, _typeWriter.speed);
+		} else {
+			// document.getElementById("search-bar-top-text-count").innerHTML = `${Math.floor(Math.random() * 1000)} results`
+			document.getElementById("search-bar-top-text-count").innerHTML = `${_typeWriter.textResults} results`
+			_typeWriter.textOld = _typeWriter.textNew
+			resetTypeWriter()
+		}
+	}
+
+	// if delete
+	else if (!_typeWriter.write) {
+		if (_typeWriter.count < _typeWriter.textOld.length) {
+			document.getElementById("search-bar-top-text-input").innerHTML = document.getElementById("search-bar-top-text-input").innerHTML.slice(0, -1)
+			_typeWriter.count++
+			setTimeout(typeWriter, _typeWriter.speed / 2);
+		} else {
+			resetTypeWriter()
+			setTimeout(typeWriter, _typeWriter.speed);
+		}
+	}
+}
+
+function resetTypeWriter() {
+	_typeWriter.write = !_typeWriter.write
+	_typeWriter.count = 0
+}
+
+typeWriter()

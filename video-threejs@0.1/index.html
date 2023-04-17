@@ -21,6 +21,9 @@
 	<!-- Import maps polyfill -->
 	<!-- Remove this when import maps will be widely supported -->
 	<script async src="https://unpkg.com/es-module-shims@1.6.3/dist/es-module-shims.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"
+		integrity="sha512-pumBsjNRGGqkPzKHndZMaAG+bir374sORyzM3uulLV14lN5LyykqNk8eEeUlUkB3U0M4FApyaHraT65ihJhDpQ=="
+		crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 	<script type="importmap">
 		{
@@ -29,11 +32,200 @@
 					"three/addons/": ".libraries/jsm/"
 				}
 			}
-		</script>
+	</script>
+
+	<style>
+		body {
+			margin: 0;
+			padding: 0;
+			/* overflow: hidden; */
+
+			/* background-color: rgb(19, 20, 21); */
+		}
+
+		canvas {
+			margin: auto;
+		}
+
+		.container {
+			width: 100vw;
+			height: calc(92vh);
+			padding: 0;
+			/* margin: auto; */
+			display: flex;
+			justify-content: center;
+			align-items: center;
+
+			/* background-color: red; */
+			background-color: rgb(19, 20, 21);
+
+			position: relative;
+		}
+
+		#video-canvas {
+			width: auto;
+			height: auto;
+		}
+
+		/* SEARCH BAR */
+		#search-bar {
+			display: flex;
+			flex-direction: column;
+			align-items: flex-start;
+			padding: 0px;
+
+			position: absolute;
+			width: 380px;
+			max-width: 80%;
+			height: auto;
+
+			left: 50%;
+			top: 50%;
+			transform: translate(-50%, -50%);
+
+			/* Elevation Background/08 */
+
+			background: linear-gradient(0deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.08)), #202124;
+			/* Drop-shadow-box */
+
+			box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.5);
+
+			/* TEMP */
+			color: rgba(255, 255, 255, 0.87);
+			font-size: 14px;
+			font-family: sans-serif;
+		}
+
+		#search-bar-top,
+		#search-bar-bot {
+			display: flex;
+			flex-direction: row;
+			align-items: center;
+
+			width: calc(100% - 16px);
+
+			padding: 0 8px;
+		}
+
+		#search-bar-top {
+			padding-top: 8px;
+		}
+
+		#search-bar-top-text {
+			display: flex;
+			flex-direction: row;
+			justify-content: space-between;
+
+			width: 100%;
+
+			padding: 8px;
+		}
+
+		#search-bar-top-text-count {
+			color: rgba(255, 255, 255, 0.38)
+		}
+
+		#search-bar-line {
+			width: 100%;
+			border: 1px solid rgba(255, 255, 255, 0.12);
+		}
+
+		#search-bar-bot-text {
+			display: flex;
+			flex-direction: row;
+			width: 100%;
+			padding: 8px;
+
+			gap: 16px;
+		}
+
+		.search-bar-bot-text-elm {
+			display: flex;
+			flex-direction: row;
+			align-items: center;
+
+			gap: 8px
+		}
+
+		#search-bar-top-text-input {
+			border-right: 1px solid white;
+			animation:
+				blink-caret .75s step-end infinite;
+		}
+
+		/* TEXT WRITE ANIMATION */
+
+		/* The typewriter cursor effect */
+		@keyframes blink-caret {
+
+			from,
+			to {
+				border-color: transparent
+			}
+
+			50% {
+				border-color: white;
+			}
+		}
+
+		/* SEARCH BAR END*/
+	</style>
 </head>
 
 <body>
 	<script type="module" src="sketch.js"></script>
+
+	<div class="container">
+		<div id="video-canvas">
+			<!-- search bar -->
+			<div id="search-bar">
+				<!-- top text -->
+				<div id="search-bar-top">
+					<div>
+						<!-- icon -->
+						<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<g clip-path="url(#clip0_92_991)">
+								<path
+									d="M15.125 21.25C18.5077 21.25 21.25 18.5077 21.25 15.125C21.25 11.7423 18.5077 9 15.125 9C11.7423 9 9 11.7423 9 15.125C9 18.5077 11.7423 21.25 15.125 21.25Z"
+									stroke="white" stroke-opacity="0.6" stroke-linecap="round"
+									stroke-linejoin="round" />
+								<path d="M19.4561 19.4563L22.9998 23" stroke="white" stroke-opacity="0.6"
+									stroke-linecap="round" stroke-linejoin="round" />
+							</g>
+							<defs>
+								<clipPath id="clip0_92_991">
+									<rect width="16" height="16" fill="white" transform="translate(8 8)" />
+								</clipPath>
+							</defs>
+						</svg>
+					</div>
+					<div id="search-bar-top-text">
+						<div id="search-bar-top-text-input"></div>
+						<div id="search-bar-top-text-count">∞ results</div>
+					</div>
+				</div>
+				<!-- line -->
+				<div id="search-bar-line"></div>
+				<!-- bot text -->
+				<div id="search-bar-bot">
+					<div id="search-bar-bot-text">
+						<div class="search-bar-bot-text-elm">Material <svg width="8" height="9" viewBox="0 0 8 9"
+								fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path d="M0.5 3L3.99999 6.49999L7.49998 3" stroke="white" stroke-opacity="0.6"
+									stroke-linejoin="bevel" />
+							</svg>
+						</div>
+						<div class="search-bar-bot-text-elm">Emmision factor<svg width="8" height="9" viewBox="0 0 8 9"
+								fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path d="M0.5 3L3.99999 6.49999L7.49998 3" stroke="white" stroke-opacity="0.6"
+									stroke-linejoin="bevel" />
+							</svg>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </body>
 
 </html>
