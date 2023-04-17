@@ -70,6 +70,7 @@ let headerSketch = function (p) {
 		}
 
 		p.frameRate(60)
+		p.noLoop()
 	}
 
 	//————————————————————————————————————————————— draw
@@ -108,38 +109,38 @@ let headerSketch = function (p) {
 		p.endShape()
 
 		// create animation for the point to go from a to b
-		let percent = (p.frameCount % 720) / 720
+		// let percent = (p.frameCount % 720) / 720
 
-		let pointIdx = p.floor(p.map(percent, 0, 1, 0, _points.length))
-		let currPoint = _points[pointIdx]
-		let nextPoint = _points[(pointIdx + 1) % _points.length]
-		let pointPercent = p.map(percent, (pointIdx) / (_points.length), (pointIdx + 1) / (_points.length), 0, 1)
-		let pointPosX = p.map(pointPercent, 0, 1, currPoint.pos.x, nextPoint.pos.x)
-		let pointPosY = p.map(pointPercent, 0, 1, currPoint.pos.y, nextPoint.pos.y)
+		// let pointIdx = p.floor(p.map(percent, 0, 1, 0, _points.length))
+		// let currPoint = _points[pointIdx]
+		// let nextPoint = _points[(pointIdx + 1) % _points.length]
+		// let pointPercent = p.map(percent, (pointIdx) / (_points.length), (pointIdx + 1) / (_points.length), 0, 1)
+		// let pointPosX = p.map(pointPercent, 0, 1, currPoint.pos.x, nextPoint.pos.x)
+		// let pointPosY = p.map(pointPercent, 0, 1, currPoint.pos.y, nextPoint.pos.y)
 
-		p.noStroke()
-		p.fill(..._clrs[2])
-		p.circle(pointPosX, pointPosY, params.swb * 2)
+		// p.noStroke()
+		// p.fill(..._clrs[2])
+		// p.circle(pointPosX, pointPosY, params.swb * 2)
 
-		if (_trail.length < _maxTrail) {
-			if (p.frameCount % _skipCircles == 0) {
-				const n = new TrailPoint(pointPosX, pointPosY, _tpIndexes)
-				_tpIndexes = (_tpIndexes + 1) % _maxTrail
-				_trail.push(n)
-			}
-		} else {
-			_trail.shift()
-		}
+		// if (_trail.length < _maxTrail) {
+		// 	if (p.frameCount % _skipCircles == 0) {
+		// 		const n = new TrailPoint(pointPosX, pointPosY, _tpIndexes)
+		// 		_tpIndexes = (_tpIndexes + 1) % _maxTrail
+		// 		_trail.push(n)
+		// 	}
+		// } else {
+		// 	_trail.shift()
+		// }
 
-		// show trail
-		for (let i = 0; i < _trail.length; i++) {
-			const tp = _trail[i]
-			tp.update(i - 1)
-			tp.show()
-			if (tp.idx % 10 == 0) {
-				tp.showText()
-			}
-		}
+		// // show trail
+		// for (let i = 0; i < _trail.length; i++) {
+		// 	const tp = _trail[i]
+		// 	tp.update(i - 1)
+		// 	tp.show()
+		// 	if (tp.idx % 10 == 0) {
+		// 		tp.showText()
+		// 	}
+		// }
 
 
 		// supporting graphics
