@@ -8,31 +8,12 @@
 
 	<title>CIRCA-LIBRARY-WEB-video-threejs</title>
 
-	<style>
-		body {
-			margin: 0;
-			padding: 0;
-			/* overflow: hidden; */
-
-			/* background-color: rgb(19, 20, 21); */
-		}
-	</style>
-
-	<!-- Import maps polyfill -->
-	<!-- Remove this when import maps will be widely supported -->
-	<script async src="https://unpkg.com/es-module-shims@1.6.3/dist/es-module-shims.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"
 		integrity="sha512-pumBsjNRGGqkPzKHndZMaAG+bir374sORyzM3uulLV14lN5LyykqNk8eEeUlUkB3U0M4FApyaHraT65ihJhDpQ=="
 		crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-
-	<script type="importmap">
-		{
-				"imports": {
-					"three": "./libraries/three.module.js",
-					"three/addons/": ".libraries/jsm/"
-				}
-			}
-	</script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.151.3/three.min.js"
+		integrity="sha512-He29azWb6CQ0yzDGpF61I/SIWlAclbP/Zh95diyYHwpN0VgkH3rtJKJkcApFJG517GxurJQ2UB676HOhB6pyBQ=="
+		crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 	<style>
 		body {
@@ -173,8 +154,8 @@
 </head>
 
 <body>
-	<script type="module" src="sketch.js"></script>
-
+	<!-- <script type="module" src="sketch.js"></script> -->
+	<script src="sketch.js" defer></script>
 	<div class="container">
 		<div id="video-canvas">
 			<!-- search bar -->

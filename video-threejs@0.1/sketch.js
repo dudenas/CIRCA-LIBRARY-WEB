@@ -1,8 +1,4 @@
-import * as THREE from 'three';
-
-import Stats from './libraries/jsm/libs/stats.module.js';
-
-let container, stats;
+let container;
 let camera, scene, renderer;
 
 let theta = 0;
@@ -259,7 +255,7 @@ function successFunction(data) {
 		}
 
 	}
-	console.log(_data)
+	// console.log(_data)
 }
 
 
@@ -270,11 +266,9 @@ function init() {
 	}).done(successFunction);
 
 	container = document.createElement('div');
-	// document.body.appendChild(container);
 	document.getElementById("video-canvas").appendChild(container);
 
-	const aspect = window.innerWidth / window.innerHeight;
-	camera = new THREE.OrthographicCamera(frustumSize * aspect / -2, frustumSize * aspect / 2, frustumSize / 2, frustumSize / -2, 1, 5000);
+	camera = new THREE.OrthographicCamera(frustumSize / -2, frustumSize / 2, frustumSize / 2, frustumSize / -2, 1, 5000);
 
 	// clear scene
 	scene = new THREE.Scene();
@@ -292,9 +286,6 @@ function init() {
 	renderer.shadowMap.type = THREE.PCFSoftShadowMap; // default THREE.PCFShadowMap/
 
 	container.appendChild(renderer.domElement);
-
-	stats = new Stats();
-	container.appendChild(stats.dom);
 
 	window.addEventListener('resize', resizeMyCanvas);
 
@@ -626,7 +617,7 @@ function animate() {
 			}
 		} else {
 			if (_waitCount == _waitTime) {
-				console.log('new animation')
+				// console.log('new animation')
 				createMyGraphics()
 			} else {
 				_waitCount++
@@ -644,8 +635,6 @@ function animate() {
 	}
 
 	requestAnimationFrame(animate);
-
-	stats.update();
 }
 
 function render() {
